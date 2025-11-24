@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
-#![feature(once_cell_get_mut)]
+use micromath::F32Ext;
+use micromath::vector::F32x2;
 
 use core::fmt::Write;
 use gba::prelude::*;
@@ -14,7 +15,10 @@ struct Paddle {
     controllable: bool
 }
 
+
+
 struct Ball {
     pub pos: Vec2<u32>,
-    pub speed: Vec2<u32>,
+    pub speed: F32x2,
 }
+

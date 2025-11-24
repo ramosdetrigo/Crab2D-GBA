@@ -7,7 +7,7 @@ use gba::prelude::*;
 
 use crab2d::algebra::vec2::*;
 use crab2d::graphics;
-use crab2d::input::*;
+use crab2d::input;
 
 #[panic_handler]
 fn panic_handler(info: &core::panic::PanicInfo) -> ! {
@@ -19,9 +19,6 @@ fn panic_handler(info: &core::panic::PanicInfo) -> ! {
 
 #[no_mangle]
 fn main() {
-    #[allow(unused_mut)]
-    let mut input = InputHandler::new();
-
     graphics::set_display_mode(
         DisplayControl::new()
             .with_show_bg2(true)
@@ -32,9 +29,9 @@ fn main() {
     loop {
         graphics::vsync();
         gba::video::video3_clear_to(Color::BLACK);
-        input.poll();
+        input::poll();
 
-        if input.key_down(Key::A) {
+        if input::key_down(input::Key::A) {
             graphics::rect(Vec2::new(20, 20), 40, 40, gba::video::Color::YELLOW);
         } else {
             graphics::frame(Vec2::new(20, 20), 40, 40, gba::video::Color::MAGENTA);
