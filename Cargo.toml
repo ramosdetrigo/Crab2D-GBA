@@ -1,21 +1,7 @@
 [package]
-name = "Crab2D"
+name = "crab2d"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "Crab2D"
-test = false
-bench = false
-
 [dependencies]
 gba = "0.15.0"
-
-[profile.dev]
-opt-level = 3
-incremental = false
-
-[profile.release]
-codegen-units = 1
-opt-level = 3
-incremental = false

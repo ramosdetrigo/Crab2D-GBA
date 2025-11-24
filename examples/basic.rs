@@ -2,23 +2,10 @@
 #![no_main]
 #![feature(once_cell_get_mut)]
 
-use core::fmt::Write;
 use gba::prelude::*;
-
-mod algebra;
-use algebra::vec2::*;
-mod graphics;
-use graphics::*;
-mod input_handler;
-use input_handler::*;
-
-#[panic_handler]
-fn panic_handler(info: &core::panic::PanicInfo) -> ! {
-    if let Ok(mut debug_buffer) = MgbaBufferedLogger::try_new(gba::mgba::MgbaMessageLevel::Fatal) {
-        writeln!(debug_buffer, "{info}").ok();
-    }
-    loop {}
-}
+use crab2d::graphics::*;
+use crab2d::input::*;
+use crab2d::algebra::vec2::*;
 
 #[no_mangle]
 extern "C" fn main() -> ! {
