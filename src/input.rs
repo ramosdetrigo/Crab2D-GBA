@@ -1,5 +1,4 @@
 #![allow(dead_code)]
-
 use gba::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -17,48 +16,47 @@ pub enum Key {
     L = 0x0200,
 }
 
-/// Main interface for handling user inputs (button presses)
-pub struct InputHandler {
-    input_previous: u16,
-    input_current: u16,
+static mut INPUT_PREVIOUS: u16 = 0;
+static mut INPUT_CURRENT: u16 = 0;
+
+#[inline(always)]
+pub fn current_input() -> u16 {
+    unsafe { INPUT_CURRENT }
 }
 
-impl InputHandler {
-    pub fn new() -> Self {
-        InputHandler {
-            input_previous: 0,
-            input_current: 0,
-        }
-    }
+#[inline(always)]
+pub fn previous_input() -> u16 {
+    unsafe { INPUT_PREVIOUS }
+}
 
-    #[inline]
-    /// Update the input handler
-    pub fn poll(&mut self) {
-        self.input_previous = self.input_current;
-        self.input_current = KEYINPUT.read().to_u16();
+/// Update the input handler
+pub fn poll() {
+    unsafe {
+        INPUT_PREVIOUS = INPUT_CURRENT;
+        INPUT_CURRENT = KEYINPUT.read().to_u16();
     }
+}
 
-    #[inline]
-    /// True if the specified key is being pressed.
-    pub fn key_down(&self, key: Key) -> bool {
-        (self.input_current & key as u16) == 0
-    }
+#[inline]
+/// True if the specified key is being pressed.
+pub fn key_down(key: Key) -> bool {
+    (current_input() & key as u16) == 0
+}
 
-    #[inline]
-    /// True if the specified key is being held down (pressed in both previous and current frame).
-    pub fn key_held(&self, key: Key) -> bool {
-        self.key_down(key) && ((self.input_previous & key as u16) == 0)
-    }
+#[inline]
+/// True if the specified key is being held down (pressed in both previous and current frame).
+pub fn key_held(key: Key) -> bool {
+    key_down(key) && ((previous_input() & key as u16) == 0)
+}
 
-    #[inline]
-    /// True if the specified key was just pressed (pressed in current frame, but not previous frame).
-    pub fn key_hit(&self, key: Key) -> bool {
-        (self.input_current & key as u16 == 0) && (!self.input_previous & key as u16 == 0)
-    }
+#[inline]
+/// True if the specified key was just pressed (pressed in current frame, but not previous frame).
+pub fn key_hit(key: Key) -> bool {
+    (current_input() & key as u16 == 0) && (previous_input() & key as u16 != 0)
+}
 
-    #[inline]
-    /// True if the specified key was just released (not pressed in current frame, but pressed in previous frame).
-    pub fn key_released(&self, key: Key) -> bool {
-        (self.input_current & key as u16 != 0) && (self.input_previous & key as u16 == 0)
-    }
+#[inline]
+/// True if the specified key was just released (not pressed in current frame, but pressed in previous frame).
+pub fn key_released(key: Key) -> bool {
+    (current_input() & key as u16 != 0) && (previous_input() & key as u16 == 0)
 }
