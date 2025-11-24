@@ -31,7 +31,7 @@ fn main() {
         gba::video::video3_clear_to(Color::BLACK);
         input::poll();
 
-        if input::key_down(input::Key::A) {
+        if input::key_released(input::Key::A) {
             graphics::rect(Vec2::new(20, 20), 40, 40, gba::video::Color::YELLOW);
         } else {
             graphics::frame(Vec2::new(20, 20), 40, 40, gba::video::Color::MAGENTA);

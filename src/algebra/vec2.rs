@@ -35,12 +35,12 @@ pub struct Vec2<T: Number> {
 
 impl<T: Number> Vec2<T> {
     #[inline]
-    pub fn new(x: T, y: T) -> Self {
+    pub const fn new(x: T, y: T) -> Self {
         Self { x, y }
     }
 
     #[inline]
-    pub fn splat(n: T) -> Self {
+    pub const fn splat(n: T) -> Self {
         Self { x: n, y: n }
     }
 
